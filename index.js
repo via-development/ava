@@ -4,11 +4,12 @@ const app = express()
 const { QuickDB, SqliteDriver } = require("quick.db");
 const sqliteDriver = new SqliteDriver("./data.db")
 const db = new QuickDB({ driver: sqliteDriver });
-const path = require("path")
+const path = require("path");
+const { verifyKeyMiddleware, InteractionType, InteractionResponseType } = require("discord-interactions");
 
-async function getAvatar (userId) {
+async function getAvatar(userId) {
     let u = await db.get(userId)
-    if (u && u.lastFetched && (u.lastFetched + 1000*60*60*24) > Date.now() && u.avatar) return u.avatar
+    if (u && u.lastFetched && (u.lastFetched + 1000 * 60 * 60 * 24) > Date.now() && u.avatar) return u.avatar
     u = { lastFetched: Date.now(), avatar: null }
     const res = await fetch(`https://discord.com/api/users/${userId}`, {
         method: "GET",
@@ -28,8 +29,29 @@ async function getAvatar (userId) {
     return userJSON.avatar
 }
 
-app.get("/", async(req, res) => {
+app.get("/", async (req, res) => {
     res.sendFile(path.resolve(__dirname, "home.html"))
+})
+
+app.post("/bot", verifyKeyMiddleware(process.env.PUBLIC_KEY), async (req, res) => {
+    const interaction = req.body;
+    if (interaction.type != InteractionType.APPLICATION_COMMAND) return
+    if (interaction.data.name == "ava") {
+        const userId = interaction.data.options.find(o => o.name == "user").value
+        const format = interaction.data.options.find(o => o.name == "format")?.value
+        const size = interaction.data.options.find(o => o.name == "size")?.value
+
+        let url = `https://ava.viadev.xyz/${userId}`
+        if (format) url += `.${format}`
+        if (size) url += `?size=${size}`
+
+        return res.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: `${url} .`,
+            },
+        })
+    }
 })
 
 app.get("/:id", async (req, res) => {
@@ -42,13 +64,13 @@ app.get("/:id", async (req, res) => {
     }
     const size = req.query.size || 2048
     const $f = (url) => {
-        if (format) url+=`.${format}`
-        if (size) url+=`?size=${size}`
+        if (format) url += `.${format}`
+        if (size) url += `?size=${size}`
         return url
     }
-    if (!RegExp("[0-9]{18,19}").test(userId.trim())) return res.redirect(`https://cdn.discordapp.com/embed/avatars/5.${format||"png"}?size=${size}`)
+    if (!RegExp("[0-9]{18,19}").test(userId.trim())) return res.redirect(`https://cdn.discordapp.com/embed/avatars/5.${format || "png"}?size=${size}`)
     const avatar = await getAvatar(userId)
-    if (!avatar) return res.redirect(`https://cdn.discordapp.com/embed/avatars/5.${format||"png"}?size=${size}`)
+    if (!avatar) return res.redirect(`https://cdn.discordapp.com/embed/avatars/5.${format || "png"}?size=${size}`)
     else res.redirect($f(`https://cdn.discordapp.com/avatars/${userId}/${avatar}`))
 })
 
