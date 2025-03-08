@@ -33,6 +33,10 @@ app.get("/", async (req, res) => {
     res.sendFile(path.resolve(__dirname, "home.html"))
 })
 
+app.get("/bot", async (req, res) => {
+    res.redirect("https://discord.com/oauth2/authorize?client_id=1206787663584165898")
+})
+
 app.post("/bot", verifyKeyMiddleware(process.env.PUBLIC_KEY), async (req, res) => {
     const interaction = req.body;
     if (interaction.type != InteractionType.APPLICATION_COMMAND) return
