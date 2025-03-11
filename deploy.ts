@@ -42,6 +42,12 @@ const req = await fetch(`https://discord.com/api/v10/applications/${Bun.env.BOT_
             }, {
                 name: "1024",
                 value: 1024
+            }, {
+                name: "512",
+                value: 512
+            }, {
+                name: "256",
+                value: 256
             }]
         }],
         integration_types: [1],

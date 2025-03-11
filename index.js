@@ -66,7 +66,7 @@ app.get("/:id", async (req, res) => {
         if (!u) return res.send("null")
         return res.send(`${u.avatar}<br>${new Date(u.lastFetched).toString()}`)
     }
-    const size = req.query.size || 2048
+    const size = req.query.size || 256
     const $f = (url) => {
         if (format) url += `.${format}`
         if (size) url += `?size=${size}`
