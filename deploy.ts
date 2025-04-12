@@ -1,7 +1,7 @@
 export { }
 
 const req = await fetch(`https://discord.com/api/v10/applications/${Bun.env.BOT_ID!}/commands`, {
-    method: "POST",
+    method: "PUT",
     headers: {
         Authorization: "Bot " + Bun.env.TOKEN!,
         "Content-Type": "application/json"
@@ -56,10 +56,11 @@ const req = await fetch(`https://discord.com/api/v10/applications/${Bun.env.BOT_
         name: "emoji",
         type: 1,
         description: "Get the image link to an emoji",
-        option: [{
+        options: [{
             name: "emoji",
             description: "The emoji you want the image link to",
             type: 3,
+            required: true,
         }],
         integration_types: [1],
         contexts: [0, 1, 2],
