@@ -56,6 +56,17 @@ app.post("/bot", verifyKeyMiddleware(process.env.PUBLIC_KEY), async (req, res) =
             },
         })
     }
+    if (interaction.data.name == "emoji") {
+        const parts = interaction.data.options.find(o => o.name == "emoji").value.split(":")
+        const id = parts[2]
+        if (id == undefined || id.length < 9) return
+        return res.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: `https/cdn.discordapp.com/emojis/${id.slice(0, id.length - 1)}${parts[0] == "<a" ? ".gif" : ""} .`,
+            },
+        })
+    }
 })
 
 app.get("/:id", async (req, res) => {

@@ -6,7 +6,7 @@ const req = await fetch(`https://discord.com/api/v10/applications/${Bun.env.BOT_
         Authorization: "Bot " + Bun.env.TOKEN!,
         "Content-Type": "application/json"
     },
-    body: JSON.stringify({
+    body: JSON.stringify([{
         name: "ava",
         type: 1,
         description: "Get someone's avatar link",
@@ -52,7 +52,18 @@ const req = await fetch(`https://discord.com/api/v10/applications/${Bun.env.BOT_
         }],
         integration_types: [1],
         contexts: [0, 1, 2],
-    })
+    }, {
+        name: "emoji",
+        type: 1,
+        description: "Get the image link to an emoji",
+        option: [{
+            name: "emoji",
+            description: "The emoji you want the image link to",
+            type: 3,
+        }],
+        integration_types: [1],
+        contexts: [0, 1, 2],
+    }])
 })
 
 console.log(await req.json())
