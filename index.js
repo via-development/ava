@@ -63,7 +63,7 @@ app.post("/bot", verifyKeyMiddleware(process.env.PUBLIC_KEY), async (req, res) =
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
-                content: `https/cdn.discordapp.com/emojis/${id.slice(0, id.length - 1)}${parts[0] == "<a" ? ".gif" : ""} .`,
+                content: `https://cdn.discordapp.com/emojis/${id.slice(0, id.length - 1)}${parts[0] == "<a" ? ".gif" : ""} .`,
             },
         })
     }
