@@ -1,9 +1,14 @@
 services:
+  redis:
+    image: "redis:latest"
+    restart: unless-stopped
+
   ava:
     build: .
     ports:
       - "3002:3002"
     restart: unless-stopped
-  redis:
-    image: "redis:latest"
-    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379

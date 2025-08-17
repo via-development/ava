@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 import { fetchAvatarHashDiscord } from "./util";
 
-export const redis = createClient()
+export const redis = createClient({ url: Bun.env.REDIS_URL! })
 redis.on('error', (err) => console.log('Redis Client Error', err));
 await redis.connect()
 
