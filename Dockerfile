@@ -3,7 +3,7 @@ WORKDIR /usr/src/ava
 
 COPY . .
 # install dependencies
-RUN bun install --frozen-lockfile --production
+RUN bun install --production
 
 USER bun
 EXPOSE 3002/tcp
