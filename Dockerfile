@@ -3,7 +3,7 @@ WORKDIR /usr/src/ava
 
 COPY . .
 # install dependencies
-RUN bun install --production
+RUN bun install
 
 USER bun
 EXPOSE 3002/tcp
